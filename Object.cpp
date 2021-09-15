@@ -44,15 +44,15 @@ namespace Serializer
     template<>
     float Object::get<float>() const
     {
-        if (type!=Type::Float && type!=Type::Int) throw std::invalid_argument("variable is not float!");
-        return val.f;
+        if ((type!=Type::Float) && (type!=Type::Int)) throw std::invalid_argument("variable is not numeric!");
+        return (type== Type::Float) ? val.f : float(val.i);
     }
 
     template<>
     int Object::get<int>() const
     {
-        if (type!=Type::Float && type!=Type::Int) throw std::invalid_argument("variable is not int!");
-        return val.i;
+        if ((type!=Type::Int) && (type!=Type::Float)) throw std::invalid_argument("variable is not numeric!");
+        return (type== Type::Int) ? val.i : int(val.f);
     }
 
     template<>
