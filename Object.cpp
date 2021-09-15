@@ -53,15 +53,18 @@ namespace Serializer
     Object& Object::get(const std::string& name)
     {
         if (type!=Type::Object && type!=Type::Null) throw std::invalid_argument("variable is not object!");
-        for(auto v : contents)
+        Object* found=propertyExist(name);
+        if (found!=nullptr)
         {
-            if(v.key==name)
-            {
-                type= Type::Object;
-                return v.value;
-            }
+            return *found;
         }
         throw std::invalid_argument("variable has not '"+name+ "' key");
+    }
+
+    void Object::set()
+    {
+        clear();
+        type = Type::Null;
     }
 
     void Object::set(float value)
@@ -92,6 +95,23 @@ namespace Serializer
         str = value;
     }
 
+    void Object::set(const std::string& value)
+    {
+        set(value.data());
+    }
+
+    Object* Object::propertyExist(const std::string& name)
+    {
+        for(auto& v : contents)
+        {
+            if(v.key==name)
+            {
+                return &(v.value);
+            }
+        }
+        return nullptr;
+    }
+
     Object& Object::setProperty(const std::string& name)
     {
         if (type!=Type::Object)
@@ -99,8 +119,14 @@ namespace Serializer
             clear();
             type=Type::Object;
         }
-        contents.push_back({name,Object()});
-        return contents.back().value;
+        Object* prop= propertyExist(name);
+        if (prop==nullptr)
+        {
+            contents.push_back({name,Object()});
+            prop=&(contents.back().value);
+        }
+            
+        return *prop;
     }  
 
     void Object::setProperty(const std::string& name, const Object& value )

@@ -1,7 +1,7 @@
-#ifndef SERIALIZER_JSON
-#define SERIALIZER_JSON
+#ifndef SERIALIZER_JSON_DUMP
+#define SERIALIZER_JSON_DUMP
 
-#include"Serializer.h"
+#include"../Object.h"
 #include<fstream>
 
 namespace Serializer

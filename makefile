@@ -1,7 +1,7 @@
 
 #LIBRARY MODULE
 GCC:=g++
-FLAGS:=-g -O1
+FLAGS:=-g
 SOURCES:=$(shell find . -name  "*.cpp" ! -path "./Test/*" )
 HEADERS:=$(shell find . -name  "*.h" ! -path "./Test/*" )
 INC:=

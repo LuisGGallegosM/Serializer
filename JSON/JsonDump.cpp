@@ -1,8 +1,15 @@
 
-#include"JSON.h"
+#include"JsonDump.h"
 
 namespace Serializer
 {
+    struct state
+    {
+        char c;
+        int linenum;
+        bool error;
+    };
+    
     void dumpJson(const Object& obj, const std::string& filename)
     {
         std::ofstream file(filename,std::ios_base::trunc);
@@ -81,5 +88,4 @@ namespace Serializer
             break;
         }
     }
-
 }

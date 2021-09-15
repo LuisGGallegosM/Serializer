@@ -32,13 +32,10 @@ namespace Serializer
             val.i=0;
         }
 
-        Object(Type t) : Object() 
-        {
-            type=t;
-        }
-
         Object(const Object& obj) = default;
         Object(Object&& obj) = default;
+
+        Object& operator=(const Object& other) = default;
 
         void clear();
         
@@ -52,9 +49,12 @@ namespace Serializer
         void set(int value);
         void set(bool value);
         void set(const char* value);
+        void set(const std::string& value);
+        void set();
 
         Object& setProperty(const std::string& name);
         void setProperty(const std::string& name ,const Object& value);
+        Object* propertyExist(const std::string& name);
         void set(const std::vector<Object>& value);
 
         Object& at(int index);
