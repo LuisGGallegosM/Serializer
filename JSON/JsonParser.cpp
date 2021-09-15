@@ -71,7 +71,7 @@ namespace Serializer
             advanceWhitespace();
             Object value = parseValue();
 
-            output.setProperty(key,value);
+            output.property(key) =value;
             advanceWhitespace();
             if (c=='}') break;
             if (c!=',') throw getError();

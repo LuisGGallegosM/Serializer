@@ -27,10 +27,12 @@ namespace Serializer
 
         public:
 
-        Object(): type(Type::Null), contents(), str()
-        {
-            val.i=0;
-        }
+        Object();
+        Object(int value);
+        Object(float value);
+        Object(bool value);
+        Object(const std::string& value);
+        Object(const char* value);
 
         Object(const Object& obj) = default;
         Object(Object&& obj) = default;
@@ -42,9 +44,6 @@ namespace Serializer
         template<typename T>
         T get() const;
 
-        const Object& get(const std::string& name) const;
-        Object& get(const std::string& name);
-
         void set(float value);
         void set(int value);
         void set(bool value);
@@ -52,24 +51,25 @@ namespace Serializer
         void set(const std::string& value);
         void set();
 
-        Object& setProperty(const std::string& name);
-        void setProperty(const std::string& name ,const Object& value);
+        const Object& property(const std::string& name) const;
+        Object& property(const std::string& name);
+
         Object* propertyExist(const std::string& name);
+        const Object* propertyExist(const std::string& name) const;
         void set(const std::vector<Object>& value);
 
         Object& at(int index);
         const Object& at(int index) const;
 
+        const Object& operator[] (const std::string& name) const { return property(name); }
+        Object& operator[] (const std::string& name) { return property(name); }
+        Object& operator[] (int index) {return at(index);}
+        const Object& operator[](int index) const {return at(index);}
+
         Type getType() const {return type;}
         std::vector<std::string> getKeys() const;
         int size() const {return contents.size();}
     };
-
-    template<>
-    float Object::get<float>() const;
-
-    template<>
-    int Object::get<int>() const;
 
     struct KeyValuePair
     {

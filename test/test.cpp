@@ -34,14 +34,14 @@ void testAdd(Tester* t)
 void testObjDump(Tester* t)
 {
     Serializer::Object obj;
-    obj.setProperty("val1").set(integer);
-    obj.setProperty("val2").set(f);
-    auto& val3 = obj.setProperty("val3");
-    val3.setProperty("subval1").set(str);
-    val3.setProperty("subval2").set(bol);
-    val3.setProperty("subval3").at(0).set(integer);
-    val3.setProperty("subval3").at(1).set(f);
-    obj.setProperty("subval4").at(0) = val3;
+    obj["val1"]=integer;
+    obj["val2"]=f;
+    auto& val3 = obj["val3"];
+    val3["subval1"]=str;
+    val3["subval2"]=bol;
+    val3["subval3"][0]=integer;
+    val3["subval3"][1]=f;
+    obj["subval4"][0] = val3;
     
     Serializer::dumpJson(obj,"test.json");
 }
@@ -50,10 +50,10 @@ void testObjParse(Tester* t)
 {
     const Serializer::Object obj = Serializer::parseJson("test.json");
     Serializer::dumpJson(obj,cout);
-    t->assert_eq( obj.get("val1").get<int>(), integer,"integer retrieved" );
-    t->assert_eq(obj.get("val2").get<float>(), f , "float retrieved");
-    t->assert_eq(obj.get("val3").get("subval1").get<std::string>(),str , "string retrieved");
-    t->assert_eq( obj.get("val3").get("subval2").get<bool>(), bol,"boolean retrieved" );
+    t->assert_eq(obj.property("val1").get<int>(), integer,"integer retrieved" );
+    t->assert_eq(obj.property("val2").get<float>(), f , "float retrieved");
+    t->assert_eq(obj.property("val3").property("subval1").get<std::string>(),str , "string retrieved");
+    t->assert_eq(obj.property("val3").property("subval2").get<bool>(), bol,"boolean retrieved" );
 }
 
 int main()

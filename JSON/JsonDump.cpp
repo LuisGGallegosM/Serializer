@@ -29,7 +29,7 @@ namespace Serializer
             {
                 if(firstComma) output << ",\n";
                 output << ind << "\"" << key << "\" : ";
-                dumpJson( obj.get(key), output, indent+1 );
+                dumpJson( obj.property(key), output, indent+1 );
                 firstComma=true;
             }
         output << '\n' << ind << "}";

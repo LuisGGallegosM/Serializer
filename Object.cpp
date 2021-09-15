@@ -4,6 +4,35 @@
 
 namespace Serializer
 {
+    Object::Object(): type(Type::Null), contents(), str()
+    {
+        val.i=0;
+    }
+
+    Object::Object(int value) :type(Type::Int), contents(), str()
+    {
+        val.i=value;
+    }
+
+    Object::Object(float value) :type(Type::Float), contents(), str()
+    {
+        val.f=value;
+    }
+
+    Object::Object(bool value) :type(Type::Bool), contents(), str()
+    {
+        val.b=value;
+    }
+
+    Object::Object(const char* value) :type(Type::String), contents(), str(value)
+    {
+        val.i=0;
+    }
+
+    Object::Object(const std::string& value) : Object(value.data())
+    {
+    }
+
     void Object::clear()
     {
         type = Type::Null;
@@ -38,27 +67,6 @@ namespace Serializer
     {
         if (type!=Type::Bool) throw std::invalid_argument("variable is not boolean!");
         return val.b;
-    }
-
-    const Object& Object::get(const std::string& name) const
-    {
-        if (type!=Type::Object) throw std::invalid_argument("variable is not object!");
-        for(const KeyValuePair& v : contents)
-        {
-            if(v.key==name) return v.value;
-        }
-        throw std::invalid_argument("variable has not '"+name+ "' key");
-    }
-
-    Object& Object::get(const std::string& name)
-    {
-        if (type!=Type::Object && type!=Type::Null) throw std::invalid_argument("variable is not object!");
-        Object* found=propertyExist(name);
-        if (found!=nullptr)
-        {
-            return *found;
-        }
-        throw std::invalid_argument("variable has not '"+name+ "' key");
     }
 
     void Object::set()
@@ -112,31 +120,41 @@ namespace Serializer
         return nullptr;
     }
 
-    Object& Object::setProperty(const std::string& name)
+    const Object* Object::propertyExist(const std::string& name) const
     {
-        if (type!=Type::Object)
+        for(auto& v : contents)
         {
-            clear();
-            type=Type::Object;
+            if(v.key==name)
+            {
+                return &(v.value);
+            }
         }
-        Object* prop= propertyExist(name);
-        if (prop==nullptr)
-        {
-            contents.push_back({name,Object()});
-            prop=&(contents.back().value);
-        }
-            
-        return *prop;
-    }  
+        return nullptr;
+    }
 
-    void Object::setProperty(const std::string& name, const Object& value )
+    const Object& Object::property(const std::string& name) const
+    {
+        if (type!=Type::Object) throw std::invalid_argument("variable is not object!");
+        const Object* prop=propertyExist(name);
+        if (prop!=nullptr) return *prop;
+        throw std::invalid_argument("variable has not '"+name+ "' key");
+    }
+
+    Object& Object::property(const std::string& name)
     {
         if (type!=Type::Object)
         {
             clear();
             type=Type::Object;
         }
-        contents.push_back({name,value});
+        Object* found=propertyExist(name);
+        if (found==nullptr)
+        {
+            contents.push_back({ name , Object() });
+            found= &(contents.back().value);
+        }
+
+        return *found;
     }
 
     void Object::set(const std::vector<Object>& value)
