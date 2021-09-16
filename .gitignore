@@ -1,4 +1,5 @@
 *.a
 libSerializer.s
-*.json
+test1.json
+test3.json
 testing

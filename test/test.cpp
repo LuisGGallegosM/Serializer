@@ -12,6 +12,10 @@ const float f = 3.5f;
 const char str[]= "string1";
 const bool bol = true;
 
+const char filename1[]="test/test1.json";
+const char filename2[]="test/test2.json";
+const char filename3[]="test/test3.json";
+
 void testAdd(Tester* t)
 {
     int val_int=3;
@@ -43,17 +47,32 @@ void testObjDump(Tester* t)
     val3["subval3"][1]=f;
     obj["subval4"][0] = val3;
     
-    Serializer::dumpJson(obj,"test.json");
+    Serializer::dumpJson(obj,"test/test1.json");
+    t->assert_true(true,"test1.json dumped");
 }
 
 void testObjParse(Tester* t)
 {
-    const Serializer::Object obj = Serializer::parseJson("test.json");
-    Serializer::dumpJson(obj,cout);
-    t->assert_eq(obj.property("val1").get<int>(), integer,"integer retrieved" );
-    t->assert_eq(obj.property("val2").get<float>(), f , "float retrieved");
-    t->assert_eq(obj.property("val3").property("subval1").get<std::string>(),str , "string retrieved");
-    t->assert_eq(obj.property("val3").property("subval2").get<bool>(), bol,"boolean retrieved" );
+    Serializer::Object obj = Serializer::parseJson(filename1);
+    t->assert_true(true,"test1.json parsed");
+
+    obj = Serializer::parseJson(filename2);
+    t->assert_true(true,"test2.json parsed");
+}
+
+void testIdenpotent(Tester* t)
+{
+    Serializer::Object obj = Serializer::parseJson(filename1);
+    Serializer::dumpJson(obj,filename3);
+    std::fstream f1(filename3);
+    std::fstream f2(filename1);
+
+    std::stringstream str1;
+    std::stringstream str2;
+    str1 << f1.rdbuf();
+    str2 << f2.rdbuf();
+    t->assert_true(str1.str()==str2.str(),"parse dump identpotent"); 
+
 }
 
 int main()
@@ -62,5 +81,6 @@ int main()
     t.test(testAdd,"add");
     t.test(testObjDump,"dump");
     t.test(testObjParse,"parse");
-    return 0;
+    t.test(testIdenpotent,"parse+dump identpotent");
+    return t.returnValue();
 }

@@ -2,13 +2,13 @@
 #LIBRARY MODULE
 GCC:=g++
 FLAGS:=-g
-SOURCES:=$(shell find . -name  "*.cpp" ! -path "./Test/*" )
-HEADERS:=$(shell find . -name  "*.h" ! -path "./Test/*" )
+SOURCES:=$(shell find . -name  "*.cpp" ! -path "./test/*" )
+HEADERS:=$(shell find . -name  "*.h" ! -path "./test/*" )
 INC:=
 LIBS:=
 OUTPUT:=libSerializer
 
-all : ${OUTPUT}.a test
+all : ${OUTPUT}.a testing
 	./testing
 
 ${OUTPUT}.a : ${SOURCES} ${HEADERS}
@@ -21,5 +21,5 @@ clear :
 	rm -f ${OUTPUT}.a *.o *.s
 	rm -f testing
 
-test : test/test.cpp
+testing : test/test.cpp ${OUTPUT}.a
 	g++ test/test.cpp ../Tester/libTester.a ${OUTPUT}.a ${INC} ${LIBS} ${FLAGS} -o testing
