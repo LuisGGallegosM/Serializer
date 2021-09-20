@@ -2,7 +2,7 @@
 #include<sstream>
 #include<fstream>
 #include"../Serializer.h"
-#include"../../Tester/Tester.h"
+#include"Tester/Tester.h"
 
 using std::cout;
 using std::string;
