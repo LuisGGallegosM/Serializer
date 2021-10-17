@@ -32,13 +32,17 @@ testing : build/test
 	mkdir tests/output
 	./build/test
 
-install: ${OUTPUT}
+install: ${OUTPUT} uninstall
+	@echo ">>installing to ${INSTALL_DIR}"
+	mkdir -p ${INSTALL_DIR}/lib
 	cp ${OUTPUT} ${INSTALL_DIR}/lib/lib${NAME}.a
 	mkdir -p ${INSTALL_DIR}/include/${NAME}
 	for FILE in ${HEADERS}; do \
-	cp $${FILE} ${INSTALL_DIR}/include/${NAME}/$( shell basename ${NAME} ); \
+	F=$$(dirname $$FILE); \
+	mkdir -p ${INSTALL_DIR}/include/${NAME}$${F#./src}; \
+	cp $${FILE} ${INSTALL_DIR}/include/${NAME}$${FILE#./src}; \
 	done
 
-uninstall:
+uninstall: 
 	rm -f ${INSTALL_DIR}/lib/${OUTPUT}
 	rm -rf ${INSTALL_DIR}/include/${NAME}
