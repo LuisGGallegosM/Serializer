@@ -1,36 +1,44 @@
 
 #LIBRARY MODULE
 GCC:=g++
-FLAGS:=-g
-SOURCES:=$(shell find . -name  "*.cpp" ! -path "./test/*" )
-HEADERS:=$(shell find . -name  "*.h" ! -path "./test/*" )
+FLAGS:=-Wall -Wextra -Wpedantic -g -O1 -std=c++17
+SOURCES:=$(shell find ./src -name  "*.cpp" )
+HEADERS:=$(shell find ./src -name  "*.h" )
 INC:=
-LIBS:=-lTester
+LIBS:=
 INSTALL_DIR:=${HOME}/.local
 NAME:=Serializer
-OUTPUT:=lib${NAME}
+OUTPUT:=build/lib${NAME}.a
 
-all : ${OUTPUT}.a testing
-	./testing
+all : ${OUTPUT} testing
 
-${OUTPUT}.a : ${SOURCES} ${HEADERS}
+${OUTPUT} : ${SOURCES} ${HEADERS}
+	mkdir -p build
 	${GCC} ${SOURCES} ${INC} ${FLAGS} -c
-	ar rcs ${OUTPUT}.a *.o
-	objdump -drCat -Mintel --no-show-raw-insn ${OUTPUT}.a > ${OUTPUT}.s
+	ar rcs ${OUTPUT} *.o
+	objdump -drCat -Mintel --no-show-raw-insn ${OUTPUT} > ${OUTPUT}.s
 	rm -f *.o
 
 clear :
-	rm -f ${OUTPUT}.a *.o *.s
-	rm -f testing
+	rm -rf build
+	rm -rf tests/build
+	rm -rf tests/output
 
-testing : test/test.cpp ${OUTPUT}.a
-	g++ test/test.cpp ${OUTPUT}.a ${INC} ${LIBS} ${FLAGS} -o testing
+build/test: tests/test.cpp ${OUTPUT}
+	g++ tests/test.cpp ${OUTPUT} ${INC} ${LIBS} -lTester ${FLAGS} -o build/test
 
-install: ${OUTPUT}.a
-	cp ${OUTPUT}.a ${INSTALL_DIR}/lib/${OUTPUT}.a
+testing : build/test
+	rm -rf tests/output
+	mkdir tests/output
+	./build/test
+
+install: ${OUTPUT}
+	cp ${OUTPUT} ${INSTALL_DIR}/lib/lib${NAME}.a
 	mkdir -p ${INSTALL_DIR}/include/${NAME}
-	cp ${NAME}.h ${INSTALL_DIR}/include/${NAME}/${NAME}.h
+	for FILE in ${HEADERS}; do \
+	cp $${FILE} ${INSTALL_DIR}/include/${NAME}/$( shell basename ${NAME} ); \
+	done
 
 uninstall:
-	rm -f ${INSTALL_DIR}/lib/${OUTPUT}.a
+	rm -f ${INSTALL_DIR}/lib/${OUTPUT}
 	rm -rf ${INSTALL_DIR}/include/${NAME}

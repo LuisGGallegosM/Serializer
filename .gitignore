@@ -1,5 +1,2 @@
-*.a
-libSerializer.s
-test1.json
-test3.json
-testing
+build
+tests/output

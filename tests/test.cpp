@@ -1,7 +1,7 @@
 #include<iostream>
 #include<sstream>
 #include<fstream>
-#include"../Serializer.h"
+#include"../src/Serializer.h"
 #include"Tester/Tester.h"
 
 using std::cout;
@@ -12,9 +12,9 @@ const float f = 3.5f;
 const char str[]= "string1";
 const bool bol = true;
 
-const char filename1[]="test/test1.json";
-const char filename2[]="test/test2.json";
-const char filename3[]="test/test3.json";
+const char filename1[]="tests/output/test1.json";
+const char filename2[]="tests/input/testIn1.json";
+const char filename3[]="tests/output/test3.json";
 
 void testAdd(Tester* t)
 {
@@ -47,7 +47,7 @@ void testObjDump(Tester* t)
     val3["subval3"][1]=f;
     obj["subval4"][0] = val3;
     
-    Serializer::dumpJson(obj,"test/test1.json");
+    Serializer::dumpJson(obj,filename1);
     t->assert_true(true,"test1.json dumped");
 }
 
