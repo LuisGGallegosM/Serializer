@@ -6,7 +6,7 @@
 
 namespace Serializer
 {
-    void dumpJson(const Object& obj, const std::string& filename);
+    void dumpJson(const Object& obj, const char* filename);
     void dumpJson(const Object& obj,std::ostream& output , int indent=0 );
 }
 

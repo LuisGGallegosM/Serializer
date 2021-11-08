@@ -12,9 +12,9 @@ const float f = 3.5f;
 const char str[]= "string1";
 const bool bol = true;
 
-const char filename1[]="tests/output/test1.json";
-const char filename2[]="tests/input/testIn1.json";
-const char filename3[]="tests/output/test3.json";
+const char filename1[]="./tests/output/test1.json";
+const char filename2[]="./tests/input/testIn1.json";
+const char filename3[]="./tests/output/test3.json";
 
 void testAdd(Tester* t)
 {
@@ -22,15 +22,15 @@ void testAdd(Tester* t)
     float val_float=2.0f;
     Serializer::Object obj;
 
-    obj.set(val_int);
+    obj=val_int;
 
-    int obtained= obj.get<int>();
+    int obtained= obj;
 
     t->assert_eq(val_int,obtained,"set integer");
 
-    obj.set(2.0f);
+    obj=2.0f;
 
-    float obtained_f= obj.get<float>();
+    float obtained_f= obj;
     t->assert_eq(obtained_f,val_float,"set float");
 
 }

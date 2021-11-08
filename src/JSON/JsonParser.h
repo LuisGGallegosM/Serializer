@@ -6,7 +6,7 @@
 
 namespace Serializer
 {
-    Object parseJson(const std::string& filename);
+    Object parseJson(const char* filename);
 
     class JsonParser
     {
@@ -18,7 +18,7 @@ namespace Serializer
         void advanceWhitespace();
         bool advance();
         std::string advanceUpTo(char limit);
-        std::invalid_argument getError();
+        std::invalid_argument getError(const char* st);
         KeyValuePair parseKeyValuePair();
 
         Object parseObject();

@@ -9,6 +9,9 @@ namespace Serializer
         val.i=0;
     }
 
+    Object::Object(nullptr_t n): Object()
+    {}
+
     Object::Object(int value) :type(Type::Int), contents(), str()
     {
         val.i=value;
@@ -24,13 +27,11 @@ namespace Serializer
         val.b=value;
     }
 
-    Object::Object(const char* value) :type(Type::String), contents(), str(value)
+    Object::Object(const char* value) :type(Type::String), contents(), str()
     {
+        if(value!=nullptr) 
+            str=value;
         val.i=0;
-    }
-
-    Object::Object(const std::string& value) : Object(value.data())
-    {
     }
 
     void Object::clear()
@@ -41,74 +42,70 @@ namespace Serializer
         contents.clear();
     }
 
-    template<>
-    float Object::get<float>() const
+    Object::operator float() const 
     {
         if ((type!=Type::Float) && (type!=Type::Int)) throw std::invalid_argument("variable is not numeric!");
         return (type== Type::Float) ? val.f : float(val.i);
     }
 
-    template<>
-    int Object::get<int>() const
+    Object::operator int() const 
     {
         if ((type!=Type::Int) && (type!=Type::Float)) throw std::invalid_argument("variable is not numeric!");
         return (type== Type::Int) ? val.i : int(val.f);
     }
 
-    template<>
-    std::string Object::get<std::string>() const
+    Object::operator const char*() const 
     {
         if (type!=Type::String) throw std::invalid_argument("variable is not string!");
-        return str;
+        return str.data();
     }
 
-    template<>
-    bool Object::get<bool>() const
+    Object::operator bool() const 
     {
         if (type!=Type::Bool) throw std::invalid_argument("variable is not boolean!");
         return val.b;
     }
 
-    void Object::set()
+    Object& Object::operator=(nullptr_t n)
     {
         clear();
         type = Type::Null;
+        return (*this);
     }
 
-    void Object::set(float value)
+    Object& Object::operator=(float value)
     {
         clear();
         type=Type::Float;
         val.f = value;
+        return (*this);
     }
 
-    void Object::set(int value)
+    Object& Object::operator=(int value) 
     {
         clear();
         type=Type::Int;
         val.i = value;
+        return (*this);
     }
 
-    void Object::set(bool value)
+    Object& Object::operator=(bool value)
     {
         clear();
         type=Type::Bool;
         val.b = value;
+        return (*this);
     }
 
-    void Object::set(const char* value)
+    Object& Object::operator=(const char* value)
     {
         clear();
         type=Type::String;
         str = value;
+        return (*this);
     }
 
-    void Object::set(const std::string& value)
-    {
-        set(value.data());
-    }
-
-    Object* Object::propertyExist(const std::string& name)
+    Object* Object::find(const char* name)
     {
         for(auto& v : contents)
         {
@@ -120,7 +117,7 @@ namespace Serializer
         return nullptr;
     }
 
-    const Object* Object::propertyExist(const std::string& name) const
+    const Object* Object::find(const char* name) const
     {
         for(auto& v : contents)
         {
@@ -132,22 +129,22 @@ namespace Serializer
         return nullptr;
     }
 
-    const Object& Object::property(const std::string& name) const
+    const Object& Object::operator[] (const char* name) const
     {
         if (type!=Type::Object) throw std::invalid_argument("variable is not object!");
-        const Object* prop=propertyExist(name);
+        const Object* prop=find(name);
         if (prop!=nullptr) return *prop;
-        throw std::invalid_argument("variable has not '"+name+ "' key");
+        throw std::invalid_argument("variable has not '"+std::string(name)+ "' key");
     }
 
-    Object& Object::property(const std::string& name)
+    Object& Object::operator[] (const char* name)
     {
         if (type!=Type::Object)
         {
             clear();
             type=Type::Object;
         }
-        Object* found=propertyExist(name);
+        Object* found=find(name);
         if (found==nullptr)
         {
             contents.push_back({ name , Object() });
@@ -157,28 +154,7 @@ namespace Serializer
         return *found;
     }
 
-    void Object::set(const std::vector<Object>& value)
-    {
-        clear();
-        type=Type::Array;
-        int index=0;
-        for(auto val : value)
-        {
-            contents.push_back({ std::to_string(index) , val});
-            index++;
-        }
-    }
-
-    std::vector<std::string> Object::getKeys() const
-    {
-        if (type!=Type::Object) throw std::invalid_argument("variable is not object!");
-        std::vector<std::string> out;
-        for(auto val : contents)
-            out.push_back(val.key);
-        return out;
-    }
-
-    Object& Object::at(int index)
+    Object& Object::operator[](int index)
     {
         if (index < 0) throw std::invalid_argument("negative index in array!");
         if(type!=Type::Array)
@@ -194,7 +170,7 @@ namespace Serializer
         return contents.at(index).value;
     }
 
-    const Object& Object::at(int index) const
+    const Object& Object::operator[](int index) const
     {
         if (type!=Type::Array) throw std::invalid_argument("variable is not array!");
         if (index < 0) throw std::invalid_argument("negative index in array!");
