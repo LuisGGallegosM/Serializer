@@ -1,9 +1,10 @@
 
 #include"JsonParser.h"
 
-namespace Serializer
+namespace serializer
 {
-
+namespace json
+{
     JsonParser::JsonParser(std::istream* in): c(0), linenum(1), error(false), input(in)
     {
         advance();
@@ -168,7 +169,7 @@ namespace Serializer
         return std::invalid_argument(err);
     }
 
-    Object parseJson(const char* filename)
+    Object parse(const char* filename)
     {
         std::fstream file(filename);
         if (file.is_open())
@@ -181,5 +182,5 @@ namespace Serializer
             throw std::runtime_error("ERROR: cannot open file:"+std::string(filename) + ".\n");
         }
     }    
-
+}
 }

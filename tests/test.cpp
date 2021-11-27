@@ -1,7 +1,7 @@
 #include<iostream>
 #include<sstream>
 #include<fstream>
-#include"../src/Serializer.h"
+#include"Serializer/Serializer.h"
 #include"Tester/Tester.h"
 
 using std::cout;
@@ -20,7 +20,7 @@ void testAdd(Tester* t)
 {
     int val_int=3;
     float val_float=2.0f;
-    Serializer::Object obj;
+    serializer::Object obj;
 
     obj=val_int;
 
@@ -37,7 +37,7 @@ void testAdd(Tester* t)
 
 void testObjDump(Tester* t)
 {
-    Serializer::Object obj;
+    serializer::Object obj;
     obj["val1"]=integer;
     obj["val2"]=f;
     auto& val3 = obj["val3"];
@@ -47,23 +47,23 @@ void testObjDump(Tester* t)
     val3["subval3"][1]=f;
     obj["subval4"][0] = val3;
     
-    Serializer::dumpJson(obj,filename1);
+    serializer::json::dump(obj,filename1);
     t->assert_true(true,"test1.json dumped");
 }
 
 void testObjParse(Tester* t)
 {
-    Serializer::Object obj = Serializer::parseJson(filename1);
+    serializer::Object obj = serializer::json::parse(filename1);
     t->assert_true(true,"test1.json parsed");
 
-    obj = Serializer::parseJson(filename2);
+    obj = serializer::json::parse(filename2);
     t->assert_true(true,"test2.json parsed");
 }
 
 void testIdenpotent(Tester* t)
 {
-    Serializer::Object obj = Serializer::parseJson(filename1);
-    Serializer::dumpJson(obj,filename3);
+    serializer::Object obj = serializer::json::parse(filename1);
+    serializer::json::dump(obj,filename3);
     std::fstream f1(filename3);
     std::fstream f2(filename1);
 

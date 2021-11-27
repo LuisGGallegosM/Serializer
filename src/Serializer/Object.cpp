@@ -2,7 +2,7 @@
 #include"Serializer.h"
 #include<stdexcept>
 
-namespace Serializer
+namespace serializer
 {
     Object::Object(): type(Type::Null), contents(), str()
     {

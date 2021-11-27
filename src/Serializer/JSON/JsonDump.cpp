@@ -1,7 +1,9 @@
 
 #include"JsonDump.h"
 
-namespace Serializer
+namespace serializer
+{
+namespace json
 {
     struct state
     {
@@ -10,12 +12,12 @@ namespace Serializer
         bool error;
     };
     
-    void dumpJson(const Object& obj, const char* filename)
+    void dump(const Object& obj, const char* filename)
     {
         std::ofstream file(filename,std::ios_base::trunc);
 
         if (file.good())
-            dumpJson(obj,file);
+            dump(obj,file);
         else
             throw std::runtime_error("ERROR: cannot create file:"+std::string(filename) + ".\n");
 
@@ -33,7 +35,7 @@ namespace Serializer
             {
                 if(firstComma) output << ",\n";
                 output << ind << "\"" << prop.key << "\" : ";
-                dumpJson( prop.value, output, indent+1 );
+                dump( prop.value, output, indent+1 );
                 firstComma=true;
             }
         output << '\n' << ind << "}";
@@ -51,13 +53,13 @@ namespace Serializer
             {
                 if(firstComma) output << ",\n";
                 output << ind << "  " ;
-                dumpJson( obj[i], output, indent+1 );
+                dump( obj[i], output, indent+1 );
                 firstComma=true;
             }
         output << '\n' << ind << "]";
     }
 
-    void dumpJson(const Object& obj,std::ostream& output , int indent )
+    void dump(const Object& obj,std::ostream& output , int indent )
     {
 
         Object::Type type= obj.getType();
@@ -92,4 +94,5 @@ namespace Serializer
             break;
         }
     }
+}
 }

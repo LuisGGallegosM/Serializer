@@ -5,7 +5,7 @@
 #include<vector>
 #include<string>
 
-namespace Serializer
+namespace serializer
 {
     struct KeyValuePair;
 

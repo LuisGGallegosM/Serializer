@@ -4,9 +4,11 @@
 #include"../Object.h"
 #include<fstream>
 
-namespace Serializer
+namespace serializer
 {
-    Object parseJson(const char* filename);
+namespace json
+{
+    Object parse(const char* filename);
 
     class JsonParser
     {
@@ -31,13 +33,7 @@ namespace Serializer
 
         Object parse();
     };
-
-
-
-
-
-
-
+}
 }
 
 #endif
