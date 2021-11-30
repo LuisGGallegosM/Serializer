@@ -33,7 +33,7 @@ namespace csv
                 throw std::invalid_argument("Error: in line "+std::to_string(lineNum)+" , columns dont match.");
 
             Object obj;
-            for(int i=1;i<tokens.size();i++)
+            for(int i=0;i<tokens.size();i++)
             {
                 obj[columnHeaders[i]]=tokens[i];
             }
