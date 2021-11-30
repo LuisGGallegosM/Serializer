@@ -1,0 +1,6 @@
+id,name,damage,type,ammo,ammoconsume,size,cost,signature,description,modelnum,targeting,researchCost
+200,Laser cannon,100,1,9,1 Industry 1 Energy,2,200 Industry,20,Laser beam cannon,4,0,50 Physics 50 Engineering
+201,Nuclear missile,200,2,3,5 Industry 1 Uranium,2,100 Industry,10,Tactical nuclear missile,3,0,100 Physics 100 Engineering
+202,600mm Cannon,150,3,6,3 Industry 1 Iron,1,100 Industry,0,600 mm double mount turret cannon.,2,0,50 Engineering
+203,Fighters,300,0,6,8 Industry 8 Energy 1 Hidrogen,4,600 Industry,40,Space fighter squad.,5,0,100 Physics 400 Engineering
+204,Assault module,800,4,1,30 Industry 2 Iron,4,400 Industry,0,Assault module for boarding and planetary invasion,11,0,600 Engineering

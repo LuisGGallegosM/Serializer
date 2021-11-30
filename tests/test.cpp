@@ -15,6 +15,8 @@ const bool bol = true;
 const char filename1[]="./tests/output/test1.json";
 const char filename2[]="./tests/input/testIn1.json";
 const char filename3[]="./tests/output/test3.json";
+const char filename4[]="./tests/input/test4.csv";
+const char filename5[]="./tests/output/test4.json";
 
 void testAdd(Tester* t)
 {
@@ -75,6 +77,14 @@ void testIdenpotent(Tester* t)
 
 }
 
+void testCsv(Tester* t)
+{
+    serializer::Object obj = serializer::csv::parse(filename4);
+
+    serializer::json::dump(obj,filename5);
+    t->assert_true(true, "changed csv to json correctly");
+}
+
 int main()
 {
     Tester t("Serializer test");
@@ -82,5 +92,6 @@ int main()
     t.test(testObjDump,"dump");
     t.test(testObjParse,"parse");
     t.test(testIdenpotent,"parse+dump identpotent");
+    t.test(testCsv,"csv");
     return t.returnValue();
 }

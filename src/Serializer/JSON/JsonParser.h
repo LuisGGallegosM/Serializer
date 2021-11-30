@@ -10,7 +10,7 @@ namespace json
 {
     Object parse(const char* filename);
 
-    class JsonParser
+    class Parser
     {
         std::istream* input;
         char c;
@@ -29,7 +29,7 @@ namespace json
 
         public:
 
-        JsonParser(std::istream* in);
+        Parser(std::istream* in);
 
         Object parse();
     };

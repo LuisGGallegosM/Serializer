@@ -176,4 +176,52 @@ namespace serializer
         if (index < 0) throw std::invalid_argument("negative index in array!");
         return contents.at(index).value;
     }
+
+    void Object::push_back(const Object& o )
+    {
+        if(type!=Type::Array)
+        {
+            clear();
+            type=Type::Array;
+        }
+        contents.push_back({"",o});
+    }
+    void Object::push_back(Object&& o )
+    {
+        if(type!=Type::Array)
+        {
+            clear();
+            type=Type::Array;
+        }
+        contents.push_back({"", std::move(o)});
+    }
+
+    int tokenize(const std::string& str, char limit, std::vector<std::string>& tokens)
+    {
+        int numOfTokens=0;
+        int i=0;
+        int last=0;
+        while(str[i]!=0)
+        {
+            if(str[i]==limit)
+            {
+                if((i-last)>0)
+                {
+                    numOfTokens++;
+                    if(int(tokens.size())<=numOfTokens) tokens.push_back("");
+                    tokens[numOfTokens-1].assign(str.data()+last,i-last);
+                }
+                last=i+1;
+            }
+            i++;
+        }
+        
+        if((i-last)>0)
+        {
+            if(int(tokens.size())<=numOfTokens) tokens.push_back("");
+            tokens[numOfTokens].assign(str.data()+last,i-last);
+        }
+            
+        return numOfTokens;
+    }
 }

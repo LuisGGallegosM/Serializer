@@ -8,7 +8,7 @@
             "name": "g++ - Debug test project",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/debug-linux/tester",
+            "program": "${workspaceFolder}/build/linux-jx-debug/tester",
             "args": [],
             "stopAtEntry": true,
             "cwd": "${workspaceRoot}",

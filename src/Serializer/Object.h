@@ -42,12 +42,14 @@ namespace serializer
         Object(float value);
         Object(bool value);
         Object(const char* value);
+        Object(const std::string& value) : Object(value.data()) {};
         Object(nullptr_t n);
 
         Object& operator=(int val);
         Object& operator=(float val);
         Object& operator=(bool val);
         Object& operator=(const char* val);
+        Object& operator=(const std::string& val) { return (*this)=val.data(); }
         Object& operator=(nullptr_t n);
 
         operator float() const;
@@ -62,12 +64,20 @@ namespace serializer
         Object* find(const char* name);
         const Object* find(const char* name) const;
 
+        const Object& operator[] (const std::string& name) const {return (*this)[name.data()];}
+        Object& operator[] (const std::string& name) {return (*this)[name.data()];}
+        
+        Object* find(const std::string& name) {return find(name.data());}
+        const Object* find(const std::string& name) const {return find(name.data());}
+
         PropertyIterable getPropertyIterable() const 
             { return PropertyIterable(contents.begin(), contents.end());}
 
         //array type access
         Object& operator[] (int index);
         const Object& operator[](int index) const;
+        void push_back(const Object& o );
+        void push_back(Object&& o );
 
         private:
         union bundle
@@ -87,6 +97,8 @@ namespace serializer
         std::string key;
         Object value;
     };
+
+    int tokenize(const std::string& str, char limit, std::vector<std::string>& tokens);
 }
 
 #endif

@@ -5,12 +5,12 @@ namespace serializer
 {
 namespace json
 {
-    JsonParser::JsonParser(std::istream* in): c(0), linenum(1), error(false), input(in)
+    Parser::Parser(std::istream* in): c(0), linenum(1), error(false), input(in)
     {
         advance();
     }
 
-    Object JsonParser::parse()
+    Object Parser::parse()
     {
         Object output;
         advanceWhitespace();
@@ -25,14 +25,14 @@ namespace json
         return output;
     }
 
-    bool JsonParser::advance()
+    bool Parser::advance()
     {
         bool cont= bool(input->get(c));
         if(c=='\n') linenum++;
         return cont;
     }
 
-    void JsonParser::advanceWhitespace()
+    void Parser::advanceWhitespace()
     {
         do 
         {
@@ -40,7 +40,7 @@ namespace json
         } while(advance());
     }
 
-    std::string JsonParser::advanceUpTo(char limit)
+    std::string Parser::advanceUpTo(char limit)
     {
         std::string output;
         do 
@@ -52,7 +52,7 @@ namespace json
         return output;
     }
 
-    Object JsonParser::parseObject()
+    Object Parser::parseObject()
     {
         Object output;
         if (c!='{') throw getError("parse, expected {");
@@ -83,7 +83,7 @@ namespace json
         return output;
     }
 
-    Object JsonParser::parseArray()
+    Object Parser::parseArray()
     {
         Object output;
         int index=0;
@@ -102,7 +102,7 @@ namespace json
         return output;
     }
 
-    Object JsonParser::parseValue()
+    Object Parser::parseValue()
     {
         Object output;
         if (std::isdigit(c))
@@ -157,7 +157,7 @@ namespace json
         return output;
     }
 
-    std::invalid_argument JsonParser::getError(const char* st)
+    std::invalid_argument Parser::getError(const char* st)
     {
         std::string err="ERROR: in "+std::string(st)+" at line " +std::to_string(linenum) + ": '";
         if ( isgraph(c) )
@@ -174,7 +174,7 @@ namespace json
         std::fstream file(filename);
         if (file.is_open())
         {
-            JsonParser parser(&file);
+            Parser parser(&file);
             return parser.parse();
         }
         else
