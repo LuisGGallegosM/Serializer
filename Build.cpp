@@ -11,7 +11,7 @@ int main(int argc,const char **argv)
 	Serializer.install();
 
 	Serializer.add({
-		"JSON/JsonDump.cpp","JSON/JsonParser.cpp","Object.cpp","JSON/JsonDump.h",
+		"JSON/JsonDump.cpp","JSON/JsonParser.cpp","Object.cpp","Serializer.cpp","JSON/JsonDump.h",
 		"JSON/JsonParser.h","CSV/CsvParser.cpp","CSV/CsvParser.h","Object.h","Serializer.h"	});
 
 
